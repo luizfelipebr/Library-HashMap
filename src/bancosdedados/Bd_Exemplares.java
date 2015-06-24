@@ -1,6 +1,7 @@
 package bancosdedados;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 
 import classes.Exemplar;
@@ -76,6 +77,9 @@ public class Bd_Exemplares {
 	}
 
 	public Set<Exemplar> buscarListaExemplares(char letra) {
+		if (indiceExemplaresLetra.get(letra) == null){
+			indiceExemplaresLetra.put(letra, new HashSet<Exemplar>());
+		}
 		return indiceExemplaresLetra.get(letra);
 	}
 

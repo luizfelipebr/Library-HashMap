@@ -6,20 +6,34 @@ import bancosdedados.*;
 import classes.*;
 
 public class Main {
+	private static BD_emprestimos bd_emprestimos = new BD_emprestimos();
+	private static Bd_Exemplares bd_Exemplares = new Bd_Exemplares();
 
 	public static void main(String[] args) {
-		
-		BD_emprestimos bd_emprestimos = new BD_emprestimos();
-		Bd_Exemplares bd_Exemplares = new Bd_Exemplares();
-		
+
 		Exemplar exemplar1 = new Exemplar(1001);
 		exemplar1.setNome("O Monge e o Executivo");
 		exemplar1.setTipo("Auto Ajuda");
-		for (int i = 0; i < 5; i++) {
-			bd_Exemplares.inserirExemplarArmazenamento(exemplar1);
-		}
-		
+		bd_Exemplares.inserirExemplarArmazenamento(exemplar1);
+		bd_Exemplares.inserirExemplarArmazenamento(exemplar1);
+		bd_Exemplares.inserirExemplarArmazenamento(exemplar1);
 
+		exemplar1 = new Exemplar(1002);
+		exemplar1.setNome("A Arte da Guerra");
+		exemplar1.setTipo("Auto Ajuda");
+		bd_Exemplares.inserirExemplarArmazenamento(exemplar1);
+		bd_Exemplares.inserirExemplarArmazenamento(exemplar1);
+		
+		Cliente cliente = new Aluno();
+		cliente.setCodigo(2001);
+		cliente.setIdade(25);
+		cliente.setNome("Luiz Felipe");
+
+		menu();
+
+	}
+
+	protected static void menu() {
 		String menu = "Informe o número da tarefa que deseja efetuar:\n\n"
 				+ "1 – Consultar Disponibilidade de Exemplares\n"
 				+ "2 – Consultar se o cliente pode fazer empréstimo\n"
@@ -32,6 +46,7 @@ public class Main {
 				+ "9 – Consultar se Cliente tem empréstimo em atraso\n"
 				+ "10 – Sair\n";
 		Integer option = Integer.valueOf(JOptionPane.showInputDialog(menu));
+		String result;
 
 		switch (option) {
 		case 1:
@@ -41,27 +56,38 @@ public class Main {
 				Exemplar exemplar = bd_Exemplares.getExemplar(idExemplar);
 				int qntdade = bd_Exemplares
 						.exemplarDisponivelEmprestimo(exemplar);
-				String result = "Código: " + exemplar.getCodigo() + " Nome: "
-						+ exemplar.getNome() + " Tipo: " + exemplar.getTipo()
+				result = "Código: " + exemplar.getCodigo() + "\nNome: "
+						+ exemplar.getNome() + "\nTipo: " + exemplar.getTipo()
 						+ "\nQuantidade: " + qntdade;
 				JOptionPane.showMessageDialog(null, result);
 			} catch (NullPointerException e) {
 				JOptionPane.showMessageDialog(null, "Exemplar inexistente!");
 			}
-
+			menu();
 			break;
 		case 2:
-			bd_emprestimos.totalExemplaresPodemSerEmprestados(null);
+			int idCliente = Integer.parseInt(JOptionPane
+					.showInputDialog("Digite o código do Cliente: "));
+			try {
+				Cliente cliente = new Aluno();
+				cliente.setCodigo(idCliente);
+				int total = bd_emprestimos
+						.totalExemplaresPodemSerEmprestados(cliente);
+				result = "Total de empréstimos possíveis: " + cliente.getMaxDeExemplares()
+						+ "\nAinda podem ser emprestados: " + total;
+				JOptionPane.showMessageDialog(null, result);
+			} catch (Exception e) {
+				JOptionPane.showMessageDialog(null, e.getMessage());
+			}
 			break;
 		case 3:
-
 			break;
-
+		case 10:
+			break;
 		default:
+			menu();
 			break;
 		}
-
-
 	}
 
 }

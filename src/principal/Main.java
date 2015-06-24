@@ -8,6 +8,7 @@ import classes.*;
 public class Main {
 	private static BD_emprestimos bd_emprestimos = new BD_emprestimos();
 	private static Bd_Exemplares bd_Exemplares = new Bd_Exemplares();
+	private static Cliente cliente;
 
 	public static void main(String[] args) {
 
@@ -23,9 +24,8 @@ public class Main {
 		exemplar1.setTipo("Auto Ajuda");
 		bd_Exemplares.inserirExemplarArmazenamento(exemplar1);
 		bd_Exemplares.inserirExemplarArmazenamento(exemplar1);
-		
-		Cliente cliente = new Aluno();
-		cliente.setCodigo(2001);
+
+		cliente = new Aluno(2001);
 		cliente.setIdade(25);
 		cliente.setNome("Luiz Felipe");
 
@@ -69,18 +69,39 @@ public class Main {
 			int idCliente = Integer.parseInt(JOptionPane
 					.showInputDialog("Digite o código do Cliente: "));
 			try {
-				Cliente cliente = new Aluno();
-				cliente.setCodigo(idCliente);
+				Cliente cliente2 = new Aluno(idCliente);
 				int total = bd_emprestimos
-						.totalExemplaresPodemSerEmprestados(cliente);
-				result = "Total de empréstimos possíveis: " + cliente.getMaxDeExemplares()
+						.totalExemplaresPodemSerEmprestados(cliente2);
+				result = "Total de empréstimos possíveis: "
+						+ cliente.getMaxDeExemplares()
 						+ "\nAinda podem ser emprestados: " + total;
 				JOptionPane.showMessageDialog(null, result);
 			} catch (Exception e) {
 				JOptionPane.showMessageDialog(null, e.getMessage());
 			}
+			menu();
 			break;
 		case 3:
+			int codCliente = Integer.parseInt(JOptionPane
+					.showInputDialog("Digite o código do Cliente: "));
+			int codExemplar = Integer.parseInt(JOptionPane
+					.showInputDialog("Digite o código do exemplar: "));
+			try {
+				Emprestimo emprestimo = new Emprestimo(bd_Exemplares);
+				emprestimo.setCliente(new Aluno(codCliente));
+				emprestimo.adicionarExemplar(bd_Exemplares
+						.getExemplar(codExemplar));
+				int confirmacao = Integer.parseInt(JOptionPane
+						.showInputDialog("Confirmar empréstimo?"));
+				if (confirmacao == 1) {
+					emprestimo.confirmarEmprestimo();
+					JOptionPane
+							.showMessageDialog(null, "Emprestimo realizado!");
+				}
+			} catch (Exception e) {
+				JOptionPane.showMessageDialog(null, e.getMessage());
+			}
+			menu();
 			break;
 		case 10:
 			break;
